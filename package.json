@@ -1,0 +1,25 @@
+{
+  "name": "makise",
+  "version": "0.0.0",
+  "description": "pretty JSON schema definition language",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "prepublish": "mocha"
+  },
+  "dependencies": {
+    "es6-shim": "^0.22.2",
+    "jison": "0.4.13",
+    "jison-lex": "^0.3.4",
+    "nomnom": "^1.8.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.1.0"
+  },
+  "author": "JongChan Choi <jong@chan.moe>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/disjukr/makise.git"
+  }
+}

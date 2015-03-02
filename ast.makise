@@ -1,0 +1,70 @@
+this is makise_ast_schema
+
+makise_ast_schema is perverted_genius_girl
+perverted_genius_girl is the_zombie
+the_zombie is christina
+christina is kurisu
+kurisu is defs
+
+defs is [def, ...]
+def is {
+    type: ('a_is_b', 'a_throws_b')
+}
+def[type = 'a_is_b'] is {
+    ltype: ltype,
+    rtype: rtype
+}
+def[type = 'a_throws_b'] is {
+    ltype: ltype,
+    message: string
+}
+
+ltype is {
+    type: ('this', 'identifier')
+}
+ltype[type = 'identifier'] is {
+    name: string
+}
+
+rtype is {
+    type: (
+        'identifier',
+        'enum',
+        'tuple',
+        'pattern',
+        'object',
+        'or',
+        'and'
+    )
+}
+rtype[type = 'identifier'] is {
+    name: string
+}
+rtype[type = 'enum'] is {
+    items: [any, ...]
+}
+rtype[type = 'tuple'] is {
+    items: [rtype, ...]
+}
+rtype[type = 'pattern'] is {
+    items: [rtype, ...]
+}
+rtype[type = 'object'] is {
+    fields: [field, ...]
+}
+field is {
+    match: field_match,
+    rtype: nothing or rtype,
+    default: nothing or value
+}
+field[rtype   = undefined and
+      default = undefined]
+    throws 'can not infer the type'
+field_match is {
+    type: ('plain', 'wildcard')
+}
+field_match[type = 'plain'] is {
+    name: string
+}
+
+okabe is hentai

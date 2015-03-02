@@ -1,0 +1,23 @@
+this is package
+
+package is {
+    name: string,
+    version: semver,
+    description: string,
+    main: string,
+    scripts: {
+        *: string
+    },
+    dependencies: dependency_map,
+    devDependencies: dependency_map,
+    author: string,
+    license: license
+}
+
+dependency_map is {
+    *: semver
+}
+
+semver is string
+
+license is ('MIT', 'BSD', 'GPL') or string
