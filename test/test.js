@@ -12,6 +12,9 @@ function result(value, makiseCode) {
 function errors(value, makiseCode) {
     var schemaInstance = newSchema(makiseCode);
     schemaInstance.validate(value);
+    console.log(schemaInstance.errorList.map(function (error) {
+        return error.toString();
+    }));
     return schemaInstance.errorList;
 }
 
@@ -24,6 +27,10 @@ describe('a_is_b', function() {
         it('this is number', function () {
             assert(result(1, 'this is number'));
             assert(!result(undefined, 'this is number'));
+        });
+        it('enum', function () {
+            assert(result('apple', 'this is ("apple", "banana", "orange")'));
+            assert(errors('kiwi', 'this is ("apple", "banana", "orange")').length > 0);
         });
     });
 });

@@ -14,6 +14,32 @@ function ValidationError(value, context, message) {
     self.context = context;
     self.message = message;
 }
+ValidationError.prototype.toString = function toString() {
+    var self = this;
+    return self.message.replace(/\{\{(.+?)\}\}/g, function (match, field) {
+        return self[field + 'Repr'](self[field]);
+    });
+};
+ValidationError.prototype.valueRepr = function valueRepr(value) {
+    return JSON.stringify(value) + '';
+};
+ValidationError.prototype.contextRepr = function contextRepr(context) {
+    var identifierRegex = /[$_a-z][$_a-z0-9]*/i; // not correct but working anyway
+    var temp = context.map(function (field) {
+        if (identifierRegex.test(field)) {
+            var ok = true;
+            try {
+                eval('ok.' + field); // reserved keywords filter
+            } catch (e) {
+                ok = false;
+            }
+            if (ok) return '.' + field;
+        }
+        return '[' + JSON.stringify(field) + ']';
+    });
+    temp.unshift('this');
+    return temp.join('');
+};
 
 schema.prototype.validate = function validate(value) {
     var self = this;
@@ -39,7 +65,7 @@ schema.prototype.validate = function validate(value) {
         default: throw def;
         }
     });
-    return self.check(self.checkers['this'], value, ['this']);
+    return self.check(self.checkers['this'], value, []);
 };
 
 schema.prototype.throws = function throws(value, context, message) {
@@ -65,10 +91,24 @@ schema.prototype.check = function check(checker, value, context) {
 
 schema.prototype.rtype = function rtype(rtypeNode) {
     var self = this;
+    var throws = self.throws.bind(self);
     switch (rtypeNode.type) {
     case 'identifier': {
         return function checkerReference(value, context) {
             return self.checkers[rtypeNode.name](value, context);
+        };
+    } break;
+    case 'enum': {
+        return function enumChecker(value, context) {
+            var items = rtypeNode.items;
+            var result = items.indexOf(value) > -1;
+            if (!result) {
+                var itemsString = items.map(function (item) {
+                    return JSON.stringify(item);
+                }).join(', ');
+                throws(value, context, '{{context}} must be one of ' + itemsString + '. but {{value}}');
+            }
+            return result;
         };
     } break;
     // TODO
@@ -102,49 +142,49 @@ function getBuiltInCheckers(schema) {
     function isSomething(value, context) {
         var result = value !== undefined;
         if (!result)
-            throws(value, context, 'is nothing');
+            throws(value, context, '{{context}} is nothing');
         return result;
     }
     function isNothing(value, context) {
         var result = value === undefined;
         if (!result)
-            throws(value, context, 'is something');
+            throws(value, context, '{{context}} is something');
         return result;
     }
     function isNull(value, context) {
         var result = value === null;
         if (!result)
-            throws(value, context, 'is not null');
+            throws(value, context, '{{context}} is not null');
         return result;
     }
     function isNumber(value, context) {
         var result = typeof value === 'number';
         if (!result)
-            throws(value, context, 'is not number');
+            throws(value, context, '{{context}} is not number');
         return result;
     }
     function isString(value, context) {
         var result = typeof value === 'string';
         if (!result)
-            throws(value, context, 'is not string');
+            throws(value, context, '{{context}} is not string');
         return result;
     }
     function isBoolean(value, context) {
         var result = typeof value === 'boolean';
         if (!result)
-            throws(value, context, 'is not boolean');
+            throws(value, context, '{{context}} is not boolean');
         return result;
     }
     function isObject(value, context) {
         var result = (typeof value === 'object') && !Array.isArray(value);
         if (!result)
-            throws(value, context, 'is not object');
+            throws(value, context, '{{context}} is not object');
         return result;
     }
     function isArray(value, context) {
         var result = Array.isArray(value);
         if (!result)
-            throws(value, context, 'is not array');
+            throws(value, context, '{{context}} is not array');
         return result;
     }
 }
