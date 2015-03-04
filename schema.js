@@ -111,7 +111,33 @@ schema.prototype.rtype = function rtype(rtypeNode) {
             return result;
         };
     } break;
-    // TODO
+    case 'tuple': {
+        return function tupleChecker(value, context) {
+            var rtypes = rtypeNode.items;
+            var allIsWell = true;
+            var thisIsArray = self.check(self.checkers['array'], value, context);
+            if (thisIsArray) {
+                var correctLength = value.length === rtypes.length;
+                if (!correctLength) {
+                    if (value.length > rtypes.length)
+                        throws(value, context, '{{context}} has too many items. expected ' + rtypes.length + ', but ' + value.length);
+                    if (value.length < rtypes.length)
+                        throws(value, context, '{{context}} has too little. expected ' + rtypes.length + ', but ' + value.length);
+                    allIsWell = false;
+                }
+                value.forEach(function (item, index) {
+                    var rtype = rtypes[index];
+                    if (rtype === undefined) return;
+                    var currentContext = context.concat(index);
+                    var result = self.check(self.rtype(rtype), item, currentContext);
+                    if (!result) allIsWell = false;
+                });
+            } else {
+                allIsWell = false;
+            }
+            return allIsWell;
+        };
+    } break;
     default: throw rtypeNode;
     }
 }

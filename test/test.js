@@ -32,6 +32,11 @@ describe('a_is_b', function() {
             assert(result('apple', 'this is ("apple", "banana", "orange")'));
             assert(errors('kiwi', 'this is ("apple", "banana", "orange")').length > 0);
         });
+        it('tuple', function () {
+            assert(result([1, '2', true], 'this is [number, string, boolean]'));
+            assert(errors(['hello', false], 'this is [number, string, boolean]').length > 0);
+            assert(errors([true, 'hi', null, 0], 'this is [number, string, boolean]').length > 0);
+        });
     });
 });
 
