@@ -138,6 +138,30 @@ schema.prototype.rtype = function rtype(rtypeNode) {
             return allIsWell;
         };
     } break;
+    case 'pattern': {
+        return function patternChecker(value, context) {
+            var rtypes = rtypeNode.items;
+            var allIsWell = true;
+            var thisIsArray = self.check(self.checkers['array'], value, context);
+            if (thisIsArray) {
+                var patternLength = rtypes.length;
+                var correctLength = (value.length % patternLength) === 0;
+                if (!correctLength) {
+                    throws(value, context, '{{context}} has wrong number of items. expected a multiple of ' + rtypes.length + ', but ' + value.length);
+                    allIsWell = false;
+                }
+                value.forEach(function (item, index) {
+                    var rtype = rtypes[index % patternLength];
+                    var currentContext = context.concat(index);
+                    var result = self.check(self.rtype(rtype), item, currentContext);
+                    if (!result) allIsWell = false;
+                });
+            } else {
+                allIsWell = false;
+            }
+            return allIsWell;
+        };
+    } break;
     default: throw rtypeNode;
     }
 }
