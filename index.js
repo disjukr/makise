@@ -1,8 +1,6 @@
-require('es6-shim');
-
 var fs = require('fs');
 // var code = fs.readFileSync('./ast.makise', {encoding: 'utf8'});
-var code = 'this is [number, string, boolean]';
+var code = 'this is {a: number, b: number = 1, c = 1, *: number}';
 
 var parser = require('./parser');
 var ast = parser.parse(code);

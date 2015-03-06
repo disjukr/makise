@@ -54,8 +54,8 @@ rtype[type = 'object'] is {
 }
 field is {
     match: field_match,
-    rtype: nothing or rtype,
-    default: nothing or value
+    rtype: void or rtype,
+    default: void or value
 }
 field[rtype   = undefined and
       default = undefined]

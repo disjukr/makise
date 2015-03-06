@@ -8,7 +8,7 @@
     "prepublish": "mocha"
   },
   "dependencies": {
-    "es6-shim": "^0.22.2",
+    "es6-shim": "^0.27.1",
     "jison": "0.4.13",
     "jison-lex": "^0.3.4",
     "nomnom": "^1.8.0"

@@ -1,5 +1,6 @@
-module.exports = schema;
+require('es6-shim');
 
+module.exports = schema;
 function schema(ast) {
     var self = this;
     self.defs = ast;
@@ -162,6 +163,50 @@ schema.prototype.rtype = function rtype(rtypeNode) {
             return allIsWell;
         };
     } break;
+    case 'object': {
+        return function objectChecker(value, context) {
+            var fields = rtypeNode.fields;
+            var allIsWell = true;
+            var thisIsObject = self.check(self.checkers['object'], value, context);
+            if (thisIsObject) {
+                var plainFields = [];
+                var wildcard = null;
+                fields.forEach(function (field) {
+                    switch (field.match.type) {
+                    case 'plain': {
+                        plainFields.push(field);
+                    } break;
+                    case 'wildcard': {
+                        wildcard = field;
+                    } break;
+                    default: throw field;
+                    }
+                });
+                var restKeySet = new Set(Object.keys(value));
+                plainFields.forEach(function (field) {
+                    var key = field.match.name;
+                    var rtype = field.rtype;
+                    var item = value[key];
+                    var currentContext = context.concat(key);
+                    var result = self.check(self.rtype(rtype), item, currentContext);
+                    restKeySet.delete(key);
+                    if (!result) allIsWell = false;
+                });
+                if (wildcard) {
+                    var rtype = wildcard.rtype;
+                    Array.from(restKeySet).forEach(function (key) {
+                        var item = value[key];
+                        var currentContext = context.concat(key);
+                        var result = self.check(self.rtype(rtype), item, currentContext);
+                        if (!result) allIsWell = false;
+                    });
+                }
+            } else {
+                allIsWell = false;
+            }
+            return allIsWell;
+        };
+    } break;
     default: throw rtypeNode;
     }
 }
@@ -177,8 +222,8 @@ function getBuiltInCheckers(schema) {
     var throws = schema.throws.bind(schema);
     return {
         '*': passAll,
-        'any': isSomething,
-        'nothing': isNothing,
+        'any': isAnything,
+        'void': isUndefined,
         'null': isNull,
         'number': isNumber,
         'string': isString,
@@ -189,16 +234,16 @@ function getBuiltInCheckers(schema) {
     function passAll(value, context) {
         return true;
     }
-    function isSomething(value, context) {
+    function isAnything(value, context) {
         var result = value !== undefined;
         if (!result)
-            throws(value, context, '{{context}} is nothing');
+            throws(value, context, '{{context}} is undefined');
         return result;
     }
-    function isNothing(value, context) {
+    function isUndefined(value, context) {
         var result = value === undefined;
         if (!result)
-            throws(value, context, '{{context}} is something');
+            throws(value, context, '{{context}} is not undefined');
         return result;
     }
     function isNull(value, context) {

@@ -42,7 +42,7 @@ C is {
     j: any, // but not undefined
     k: *, // allow undefined
     l: number,
-    m: nothing, // check undefined
+    m: void, // check undefined
 }
 C[l < 1] throws 'your message'
 

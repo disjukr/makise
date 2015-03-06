@@ -20,9 +20,9 @@ function errors(value, makiseCode) {
 
 describe('a_is_b', function() {
     describe('this is what?', function () {
-        it('this is nothing', function () {
-            assert(result(undefined, 'this is nothing'));
-            assert(!result(1, 'this is nothing'));
+        it('this is void', function () {
+            assert(result(undefined, 'this is void'));
+            assert(!result(1, 'this is void'));
         });
         it('this is number', function () {
             assert(result(1, 'this is number'));
@@ -43,6 +43,11 @@ describe('a_is_b', function() {
             assert(result([1, '2', true, 3, '4', false], 'this is [number, string, boolean, ...]'));
             assert(errors(['hello', false], 'this is [number, string, boolean, ...]').length > 0);
             assert(errors([true, 'hi', null, 0], 'this is [number, string, boolean, ...]').length > 0);
+        });
+        it('object', function () {
+            assert(result({a: 1, b: '2', c: true}, 'this is {a: number, b: string, c: boolean}'));
+            assert(errors({a: 1, b: '2', c: true}, 'this is {a: number, b: string, c: boolean, d: any}').length > 0);
+            assert(result({a: 1, b: '2', c: true, d: null}, 'this is {a: number, b: string, c: boolean, *: any}'));
         });
     });
 });
