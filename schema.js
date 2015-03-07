@@ -114,23 +114,22 @@ schema.prototype.rtype = function rtype(rtypeNode) {
     } break;
     case 'tuple': {
         return function tupleChecker(value, context) {
-            var rtypes = rtypeNode.items;
+            var rtypes = rtypeNode.items.map(function (item) {
+                return self.rtype(item);
+            });
             var allIsWell = true;
             var thisIsArray = self.check(self.checkers['array'], value, context);
             if (thisIsArray) {
-                var correctLength = value.length === rtypes.length;
+                var correctLength = value.length >= rtypes.length;
                 if (!correctLength) {
-                    if (value.length > rtypes.length)
-                        throws(value, context, '{{context}} has too many items. expected ' + rtypes.length + ', but ' + value.length);
-                    if (value.length < rtypes.length)
-                        throws(value, context, '{{context}} has too little. expected ' + rtypes.length + ', but ' + value.length);
+                    throws(value, context, '{{context}} has too little. needs more or equal than ' + rtypes.length + ', but ' + value.length);
                     allIsWell = false;
                 }
                 value.forEach(function (item, index) {
                     var rtype = rtypes[index];
                     if (rtype === undefined) return;
                     var currentContext = context.concat(index);
-                    var result = self.check(self.rtype(rtype), item, currentContext);
+                    var result = self.check(rtype, item, currentContext);
                     if (!result) allIsWell = false;
                 });
             } else {
@@ -141,7 +140,9 @@ schema.prototype.rtype = function rtype(rtypeNode) {
     } break;
     case 'pattern': {
         return function patternChecker(value, context) {
-            var rtypes = rtypeNode.items;
+            var rtypes = rtypeNode.items.map(function (item) {
+                return self.rtype(item);
+            });
             var allIsWell = true;
             var thisIsArray = self.check(self.checkers['array'], value, context);
             if (thisIsArray) {
@@ -154,7 +155,7 @@ schema.prototype.rtype = function rtype(rtypeNode) {
                 value.forEach(function (item, index) {
                     var rtype = rtypes[index % patternLength];
                     var currentContext = context.concat(index);
-                    var result = self.check(self.rtype(rtype), item, currentContext);
+                    var result = self.check(rtype, item, currentContext);
                     if (!result) allIsWell = false;
                 });
             } else {
@@ -165,7 +166,11 @@ schema.prototype.rtype = function rtype(rtypeNode) {
     } break;
     case 'object': {
         return function objectChecker(value, context) {
-            var fields = rtypeNode.fields;
+            var fields = rtypeNode.fields.map(function (field) {
+                var replica = Object.create(field);
+                replica.rtype = self.rtype(replica.rtype);
+                return replica;
+            });
             var allIsWell = true;
             var thisIsObject = self.check(self.checkers['object'], value, context);
             if (thisIsObject) {
@@ -188,7 +193,7 @@ schema.prototype.rtype = function rtype(rtypeNode) {
                     var rtype = field.rtype;
                     var item = value[key];
                     var currentContext = context.concat(key);
-                    var result = self.check(self.rtype(rtype), item, currentContext);
+                    var result = self.check(rtype, item, currentContext);
                     restKeySet.delete(key);
                     if (!result) allIsWell = false;
                 });
@@ -197,7 +202,7 @@ schema.prototype.rtype = function rtype(rtypeNode) {
                     Array.from(restKeySet).forEach(function (key) {
                         var item = value[key];
                         var currentContext = context.concat(key);
-                        var result = self.check(self.rtype(rtype), item, currentContext);
+                        var result = self.check(rtype, item, currentContext);
                         if (!result) allIsWell = false;
                     });
                 }

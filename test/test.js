@@ -34,7 +34,7 @@ describe('a_is_b', function() {
         });
         it('tuple', function () {
             assert(result([1, '2', true], 'this is [number, string, boolean]'));
-            assert(errors([1, '2', true, 3, '4', false], 'this is [number, string, boolean]').length > 0);
+            assert(result([1, '2', true, null], 'this is [number, string, boolean]'));
             assert(errors(['hello', false], 'this is [number, string, boolean]').length > 0);
             assert(errors([true, 'hi', null, 0], 'this is [number, string, boolean]').length > 0);
         });
