@@ -49,6 +49,11 @@ describe('a_is_b', function() {
             assert(errors({a: 1, b: '2', c: true}, 'this is {a: number, b: string, c: boolean, d: any}').length > 0);
             assert(result({a: 1, b: '2', c: true, d: null}, 'this is {a: number, b: string, c: boolean, *: any}'));
         });
+        it('or', function () {
+            assert(result(1, 'this is number or string'));
+            assert(result('1', 'this is number or string'));
+            assert(errors(true, 'this is number or string').length > 0);
+        });
     });
 });
 

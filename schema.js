@@ -95,13 +95,14 @@ schema.prototype.rtype = function rtype(rtypeNode) {
     var throws = self.throws.bind(self);
     switch (rtypeNode.type) {
     case 'identifier': {
+        var rtype = self.checkers[rtypeNode.name];
         return function checkerReference(value, context) {
-            return self.checkers[rtypeNode.name](value, context);
+            return rtype(value, context);
         };
     } break;
     case 'enum': {
+        var items = rtypeNode.items;
         return function enumChecker(value, context) {
-            var items = rtypeNode.items;
             var result = items.indexOf(value) > -1;
             if (!result) {
                 var itemsString = items.map(function (item) {
@@ -113,10 +114,10 @@ schema.prototype.rtype = function rtype(rtypeNode) {
         };
     } break;
     case 'tuple': {
+        var rtypes = rtypeNode.items.map(function (item) {
+            return self.rtype(item);
+        });
         return function tupleChecker(value, context) {
-            var rtypes = rtypeNode.items.map(function (item) {
-                return self.rtype(item);
-            });
             var allIsWell = true;
             var thisIsArray = self.check(self.checkers['array'], value, context);
             if (thisIsArray) {
@@ -139,10 +140,10 @@ schema.prototype.rtype = function rtype(rtypeNode) {
         };
     } break;
     case 'pattern': {
+        var rtypes = rtypeNode.items.map(function (item) {
+            return self.rtype(item);
+        });
         return function patternChecker(value, context) {
-            var rtypes = rtypeNode.items.map(function (item) {
-                return self.rtype(item);
-            });
             var allIsWell = true;
             var thisIsArray = self.check(self.checkers['array'], value, context);
             if (thisIsArray) {
@@ -165,12 +166,12 @@ schema.prototype.rtype = function rtype(rtypeNode) {
         };
     } break;
     case 'object': {
+        var fields = rtypeNode.fields.map(function (field) {
+            var replica = Object.create(field);
+            replica.rtype = self.rtype(replica.rtype);
+            return replica;
+        });
         return function objectChecker(value, context) {
-            var fields = rtypeNode.fields.map(function (field) {
-                var replica = Object.create(field);
-                replica.rtype = self.rtype(replica.rtype);
-                return replica;
-            });
             var allIsWell = true;
             var thisIsObject = self.check(self.checkers['object'], value, context);
             if (thisIsObject) {
@@ -210,6 +211,20 @@ schema.prototype.rtype = function rtype(rtypeNode) {
                 allIsWell = false;
             }
             return allIsWell;
+        };
+    } break;
+    case 'or': {
+        var rtypeA = self.rtype(rtypeNode.lhs);
+        var rtypeB = self.rtype(rtypeNode.rhs);
+        return function orChecker(value, context) {
+            var errorList = self.errorList;
+            self.errorList = [];
+            var resultA = self.check(rtypeA, value, context);
+            var resultB = self.check(rtypeB, value, context);
+            var result = resultA || resultB;
+            if (!result) errorList = errorList.concat(self.errorList);
+            self.errorList = errorList;
+            return result;
         };
     } break;
     default: throw rtypeNode;
