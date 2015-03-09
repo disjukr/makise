@@ -95,8 +95,8 @@ schema.prototype.rtype = function rtype(rtypeNode) {
     var throws = self.throws.bind(self);
     switch (rtypeNode.type) {
     case 'identifier': {
-        var rtype = self.checkers[rtypeNode.name];
         return function checkerReference(value, context) {
+            var rtype = self.checkers[rtypeNode.name];
             return rtype(value, context);
         };
     } break;
@@ -224,6 +224,16 @@ schema.prototype.rtype = function rtype(rtypeNode) {
             var result = resultA || resultB;
             if (!result) errorList = errorList.concat(self.errorList);
             self.errorList = errorList;
+            return result;
+        };
+    } break;
+    case 'and': {
+        var rtypeA = self.rtype(rtypeNode.lhs);
+        var rtypeB = self.rtype(rtypeNode.rhs);
+        return function andChecker(value, context) {
+            var resultA = self.check(rtypeA, value, context);
+            var resultB = self.check(rtypeB, value, context);
+            var result = resultA && resultB;
             return result;
         };
     } break;
