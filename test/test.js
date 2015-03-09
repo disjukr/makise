@@ -59,6 +59,10 @@ describe('a_is_b', function() {
             assert(result({a: 1, b: true, c: 'string'}, 'this is {a: number} and {b: boolean}'));
             assert(errors({a: 1, c: 'string'}, 'this is {a: number} and {b: boolean}').length > 0);
         });
+        it('this is a, a is b, b is number', function () {
+            assert(result(1, ['this is a', 'a is b', 'b is number'].join('\n')));
+            assert(result(1, ['b is number', 'a is b', 'this is a'].join('\n')));
+        });
     });
 });
 
