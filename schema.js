@@ -51,19 +51,35 @@ schema.prototype.validate = function validate(value) {
         switch (def.type) {
         case 'a_is_b': {
             var ltype = def.ltype;
-            var rtype = def.rtype;
-            var checkerName = (ltype.type === 'this') ? 'this' : ltype.name;
-            // TODO: check_more type
-            self.checkers[checkerName] = self.rtype(rtype);
+            var rtype = self.rtype(def.rtype);
         } break;
         case 'a_throws_b': {
             var ltype = def.ltype;
-            var message = def.message;
-            var checkerName = (ltype.type === 'this') ? 'this' : ltype.name;
-            // TODO: check_more type
-            self.checkers[checkerName] = self.error(message);
+            var rtype = self.error(def.message);
         } break;
         default: throw def;
+        }
+        switch (ltype.type) {
+        case 'this': {
+            var checkerName = 'this';
+            self.checkers[checkerName] = rtype;
+        } break;
+        case 'identifier': {
+            var checkerName = ltype.name;
+            self.checkers[checkerName] = rtype;
+        } break;
+        case 'check_more': {
+            var checker = self.checkers[checkerName];
+            if (checker) {
+                checker.checkList = checker.checkList || [];
+                checker.checkList.push(function more(value, context) {
+                    // TODO: evaluate expression & check more
+                });
+            } else {
+                throw ltype;
+            }
+        } break;
+        default: throw ltype;
         }
     });
     return self.check(self.checkers['this'], value, []);
@@ -245,6 +261,7 @@ schema.prototype.error = function error(message) {
     var self = this;
     return function customError(value, context) {
         self.throws(value, context, message);
+        return false;
     };
 }
 

@@ -3,9 +3,6 @@
 
 this is A // check the json by type A
 
-int is number[this % 1 = 0]
-uint is int[1 / this > 0]
-
 A is {
     a: boolean,
     b: number = 0, // default value
@@ -45,6 +42,12 @@ C is {
     m: void, // check undefined
 }
 C[l < 1] throws 'your message'
+
+int is number
+int[this % 1 = 0] throws '{{context}} is not int'
+
+uint is int
+uint[1 / this > 0] throws '{{context}} is signed int'
 
 Fruit is ('apple', 'banana', 'orange') // one value in the list
 

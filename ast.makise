@@ -20,7 +20,7 @@ def[type = 'a_throws_b'] is {
 }
 
 ltype is {
-    type: ('this', 'identifier')
+    type: ('this', 'identifier', 'check_more')
 }
 ltype[type = 'identifier'] is {
     name: string
