@@ -45,7 +45,7 @@ ValidationError.prototype.contextRepr = function contextRepr(context) {
 schema.prototype.validate = function validate(value) {
     var self = this;
     self.checkedMap.clear();
-    self.errorList.length = 0;
+    while (self.errorList.pop());
     self.checkers = getBuiltInCheckers(self);
     self.defs.forEach(function (def) {
         switch (def.type) {
@@ -69,11 +69,22 @@ schema.prototype.validate = function validate(value) {
             self.checkers[checkerName] = rtype;
         } break;
         case 'check_more': {
-            var checker = self.checkers[checkerName];
+            switch (ltype.ltype.type) {
+            case 'this': {
+                var checker = self.checkers['this'];
+            } break;
+            case 'identifier': {
+                var checker = self.checkers[ltype.ltype.name];
+            } break;
+            default: throw ltype.ltype;
+            }
             if (checker) {
                 checker.checkList = checker.checkList || [];
                 checker.checkList.push(function more(value, context) {
-                    // TODO: evaluate expression & check more
+                    if (self.eval(ltype.condition, value)) {
+                        return self.check(rtype, value, context);
+                    }
+                    return true;
                 });
             } else {
                 throw ltype;
@@ -83,6 +94,15 @@ schema.prototype.validate = function validate(value) {
         }
     });
     return self.check(self.checkers['this'], value, []);
+};
+
+schema.prototype.eval = function eval(expression, context) {
+    switch (expression.type) {
+    case 'value': {
+        return expression.value;
+    } break;
+    default: throw expression;
+    }
 };
 
 schema.prototype.throws = function throws(value, context, message) {
@@ -101,9 +121,16 @@ schema.prototype.check = function check(checker, value, context) {
     }
     if (resultMap.has(checker))
         return resultMap.get(checker);
-    var result = checker(value, context);
-    resultMap.set(checker, result);
-    return result;
+    var allIsWell = checker(value, context);
+    if (allIsWell) {
+        checker.checkList = checker.checkList || [];
+        checker.checkList.forEach(function (moreChecker) {
+            var result = moreChecker(value, context);
+            if (!result) allIsWell = false;
+        });
+    }
+    resultMap.set(checker, allIsWell);
+    return allIsWell;
 }
 
 schema.prototype.rtype = function rtype(rtypeNode) {
