@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "description": "pretty JSON schema definition language",
   "main": "index.js",
+  "preferGlobal": true,
+  "bin": "cli.js",
   "scripts": {
     "test": "mocha",
     "prepublish": "mocha"

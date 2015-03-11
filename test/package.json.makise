@@ -5,13 +5,15 @@ package is {
     version: semver,
     description: string,
     main: string,
+    preferGlobal: boolean,
+    bin: string,
     scripts: {
         *: string
     },
     dependencies: dependency_map,
     devDependencies: dependency_map,
     author: string,
-    license: license
+    license: ('MIT', 'BSD', 'GPL') or string
 }
 
 dependency_map is {
@@ -19,5 +21,3 @@ dependency_map is {
 }
 
 semver is string
-
-license is ('MIT', 'BSD', 'GPL') or string

@@ -1,7 +1,7 @@
 require('es6-shim');
 
-module.exports = schema;
-function schema(ast) {
+module.exports = Schema;
+function Schema(ast) {
     var self = this;
     self.defs = ast;
     self.errorList = [];
@@ -42,7 +42,7 @@ ValidationError.prototype.contextRepr = function contextRepr(context) {
     return temp.join('');
 };
 
-schema.prototype.validate = function validate(value) {
+Schema.prototype.validate = function validate(value) {
     var self = this;
     self.checkedMap.clear();
     while (self.errorList.pop());
@@ -87,7 +87,7 @@ schema.prototype.validate = function validate(value) {
     return self.check(self.checkers['this'], value, []);
 };
 
-schema.prototype.eval = function eval(expression, context) {
+Schema.prototype.eval = function eval(expression, context) {
     var self = this;
     switch (expression.type) {
     case 'value': {
@@ -106,11 +106,11 @@ schema.prototype.eval = function eval(expression, context) {
     }
 };
 
-schema.prototype.throws = function throws(value, context, message) {
+Schema.prototype.throws = function throws(value, context, message) {
     var self = this;
     self.errorList.push(new ValidationError(value, context, message));
 }
-schema.prototype.check = function check(checker, value, context) {
+Schema.prototype.check = function check(checker, value, context) {
     var self = this;
     var checkedMap = self.checkedMap;
     var resultMap;
@@ -134,7 +134,7 @@ schema.prototype.check = function check(checker, value, context) {
     return allIsWell;
 }
 
-schema.prototype.rtype = function rtype(rtypeNode) {
+Schema.prototype.rtype = function rtype(rtypeNode) {
     var self = this;
     var throws = self.throws.bind(self);
     switch (rtypeNode.type) {
@@ -152,7 +152,7 @@ schema.prototype.rtype = function rtype(rtypeNode) {
                 var itemsString = items.map(function (item) {
                     return JSON.stringify(item);
                 }).join(', ');
-                throws(value, context, '{{context}} must be one of ' + itemsString + '. but {{value}}');
+                throws(value, context, '{{context}} should be one of ' + itemsString + '. but {{value}}');
             }
             return result;
         };
@@ -285,7 +285,7 @@ schema.prototype.rtype = function rtype(rtypeNode) {
     }
 }
 
-schema.prototype.error = function error(message) {
+Schema.prototype.error = function error(message) {
     var self = this;
     return function customError(value, context) {
         self.throws(value, context, message);
