@@ -65,15 +65,10 @@ schema.prototype.validate = function validate(value) {
             self.checkers[checkerName] = rtype;
         } break;
         case 'check_more': {
-            switch (ltype.ltype.type) {
-            case 'this': {
-                var checker = self.checkers['this'];
-            } break;
-            case 'identifier': {
+            if (ltype.ltype && ltype.ltype.type === 'identifier')
                 var checker = self.checkers[ltype.ltype.name];
-            } break;
-            default: throw ltype.ltype;
-            }
+            else
+                throw ltype.ltype;
             if (checker) {
                 checker.checkList = checker.checkList || [];
                 checker.checkList.push(function more(value, context) {
