@@ -8,7 +8,6 @@ var syntax = {
             ['\"([^\\\\\"]|\\\\.)*\"|\'([^\\\\\']|\\\\.)*\'', 'return "STRING"'],
             ['\\b(true|false)\\b', 'return "BOOLEAN"'],
             ['\\b(null)\\b', 'return "NULL"'],
-            ['\\b(this)\\b', 'return "THIS"'],
             ['\\b(is)\\b', 'return "IS"'],
             ['\\b(and)\\b', 'return "AND"'],
             ['\\b(or)\\b', 'return "OR"'],
@@ -54,7 +53,6 @@ var syntax = {
             ['primary_ltype [ expression ]', '$$ = {type: "check_more", ltype: $1, condition: $3}']
         ],
         primary_ltype: [
-            ['THIS', '$$ = {type: "this"}'],
             ['IDENTIFIER', '$$ = {type: "identifier", name: $1}'],
         ],
         rtype: [['rtype_or', '$$ = $1']],
@@ -131,7 +129,6 @@ var syntax = {
         ],
         expression: [['or_expression', '$$ = $1']],
         primary_expression: [
-            ['THIS', '$$ = {type: "identifier", name: "this"}'],
             ['IDENTIFIER', '$$ = {type: "identifier", name: $1}'],
             ['value', '$$ = {type: "value", value: $1}'],
             ['( expression )', '$$ = $2'],

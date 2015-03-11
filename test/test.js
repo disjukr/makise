@@ -66,6 +66,8 @@ describe('a_is_b', function() {
         it('check more', function () {
             assert(errors(1, 'this is number \n this[true] throws "hi, {{context}}"').length > 0);
             assert(result(1, 'this is number \n this[false] throws "bye, {{context}}"'));
+            assert(errors(true, 'this is boolean \n this[this] throws "oh"').length > 0);
+            assert(result(false, 'this is boolean \n this[this] throws "ho"'));
         });
     });
 });

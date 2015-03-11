@@ -60,10 +60,6 @@ schema.prototype.validate = function validate(value) {
         default: throw def;
         }
         switch (ltype.type) {
-        case 'this': {
-            var checkerName = 'this';
-            self.checkers[checkerName] = rtype;
-        } break;
         case 'identifier': {
             var checkerName = ltype.name;
             self.checkers[checkerName] = rtype;
@@ -100,6 +96,12 @@ schema.prototype.eval = function eval(expression, context) {
     switch (expression.type) {
     case 'value': {
         return expression.value;
+    } break;
+    case 'identifier': {
+        var member = context[expression.name];
+        if (member === undefined && expression.name === 'this')
+            return context;
+        return member;
     } break;
     default: throw expression;
     }
