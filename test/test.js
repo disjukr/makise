@@ -69,6 +69,9 @@ describe('a_is_b', function() {
             assert(errors(true, 'this is boolean \n this[this] throws "oh"').length > 0);
             assert(result(false, 'this is boolean \n this[this] throws "ho"'));
         });
+        it('expression', function () {
+            assert(errors({a: 0}, 'this is object \n this[a = 0] throws "0"').length > 0);
+        });
     });
 });
 

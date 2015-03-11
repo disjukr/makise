@@ -88,6 +88,7 @@ schema.prototype.validate = function validate(value) {
 };
 
 schema.prototype.eval = function eval(expression, context) {
+    var self = this;
     switch (expression.type) {
     case 'value': {
         return expression.value;
@@ -97,6 +98,9 @@ schema.prototype.eval = function eval(expression, context) {
         if (member === undefined && expression.name === 'this')
             return context;
         return member;
+    } break;
+    case '=': {
+        return self.eval(expression.lhs, context) == self.eval(expression.rhs, context);
     } break;
     default: throw expression;
     }
