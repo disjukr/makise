@@ -71,6 +71,14 @@ describe('a_is_b', function() {
         });
         it('expression', function () {
             assert(errors({a: 0}, 'this is object \n this[a = 0] throws "0"').length > 0);
+            assert(errors(0, 'this is number \n this[this < 1] throws "0"').length > 0);
+            assert(result(1, 'this is number \n this[this < 1] throws "0"'));
+            assert(errors(0, 'this is number \n this[this <= 1] throws "0"').length > 0);
+            assert(errors(1, 'this is number \n this[this <= 1] throws "0"').length > 0);
+            assert(result(0, 'this is number \n this[this > 1] throws "0"'));
+            assert(result(1, 'this is number \n this[this > 1] throws "0"'));
+            assert(result(0, 'this is number \n this[this >= 1] throws "0"'));
+            assert(errors(1, 'this is number \n this[this >= 1] throws "0"').length > 0);
         });
     });
 });
