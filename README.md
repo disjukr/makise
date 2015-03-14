@@ -90,3 +90,26 @@ int[this % 1 = 0] throws '{{context}} is not int'
 * `object`: 아실거라
 * `array`: 믿습니다
 
+
+## 구현된 것들, 구현될 것들
+
+* [x] `a is b`
+* [x] `a throws "message"`
+* [x] `a[expression]` more checker
+    - [x] `a[field = value]`
+    - [ ] `a[field.sub_field]`
+    - [x] `a[b < c]`, `a[b > c]`, `a[b <= c]`, `a[b >= c]`
+    - [ ] `a[b + c]`, `a[b - c]`
+    - [ ] `a[b * c]`, `a[b / c]`, `a[b % c]`
+    - [ ] `a[b or c]`, `a[b and c]`
+* [x] `a is b or c`, `a is b and c`
+* [ ] `a is not b`
+* [x] `a is (b, c)` enum checker
+* [ ] `a is (b, c,)` allow trailing comma
+* [x] `a is {b: c}` object checker
+    - [ ] `a is {b: c = d}` default value
+    - [ ] `a is {b = c}` type inference
+* [x] `a is [b, c]` array checker
+    - [x] `a is [c, d, ...]` pattern checker
+* [ ] `#if nodejs`, `#endif` preprocessor
+* [ ] validator code generation

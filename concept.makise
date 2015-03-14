@@ -82,4 +82,4 @@ checker('semver', function (value, context) {
     return result;
 });
 
-#end
+#endif
