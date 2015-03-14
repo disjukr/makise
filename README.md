@@ -9,6 +9,29 @@
 안 이쁘더라구요
 
 
+## 설치하고 돌려보기
+
+```sh
+$ git clone https://github.com/disjukr/makise.git
+$ cd makise
+$ npm install -g .
+$ makise --help
+```
+
+
+## package.json 테스트 해보기
+
+이 프로젝트 저장소는 node.js로 구현돼있어서, `package.json` 파일을 갖고 있는데요,
+test 폴더에 들어있는 `package.json.makise` 스키마를 사용해서 `package.json` 파일이 정상적인지 체크할 수 있습니다.
+
+```sh
+$ makise package.json test/package.json.makise
+```
+
+아무 내용도 출력되지 않고 프로그램이 종료된다면 `package.json`이 정상적인 내용을 담고있다는 것을 뜻합니다.
+`package.json`에 엉뚱한 타입의 데이터를 넣으면 무슨 일이 일어나는지도 한 번 확인해보세요.
+
+
 ## 문법 훑어보기
 
 ### this 정의하기
@@ -16,7 +39,6 @@
 ```makise
 this is number // 주석도 쓸 수 있어요
                /*>_<*/
-               # 이 것도 가능
 ```
 위의 스키마는 숫자라고 평가되는 JSON들을 통과시킵니다.
 
@@ -60,7 +82,7 @@ int[this % 1 = 0] throws '{{context}} is not int'
 
 * `*`: 정의되지 않은 경우를 포함해서 모든 값을 통과시켜주는 타입입니다.
 * `any`: 값이 정의된 경우에 한해서 모든 값을 통과시켜주는 타입입니다.
-* `nothing`: 정의되지 않은 경우를 제외하고 모든 값을 통과시켜주지 않는 타입입니다.
+* `void`: 정의되지 않은 경우를 제외하고 모든 값을 통과시켜주지 않는 타입입니다.
 * `null`: `null` 값만 통과시키는 타입입니다.
 * `number`: 굳이
 * `string`: 설명을
