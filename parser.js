@@ -11,6 +11,7 @@ var syntax = {
             ['\\b(is)\\b', 'return "IS"'],
             ['\\b(and)\\b', 'return "AND"'],
             ['\\b(or)\\b', 'return "OR"'],
+            ['\\b(not)\\b', 'return "NOT"'],
             ['\\b(throws)\\b', 'return "THROWS"'],
             ['[_a-zA-Z]+', 'return "IDENTIFIER"'],
             ['\\*', 'return "*"'],
@@ -196,10 +197,17 @@ var syntax = {
                 '$$ = {type: "=", lhs: $1, rhs: $3}'
             ]
         ],
-        and_expression: [
+        not_expression: [
             ['equality_expression', '$$ = $1'],
             [
-                'and_expression AND equality_expression',
+                'NOT equality_expression',
+                '$$ = {type: "not", rhs: $2}'
+            ]
+        ],
+        and_expression: [
+            ['not_expression', '$$ = $1'],
+            [
+                'and_expression AND not_expression',
                 '$$ = {type: "and", lhs: $1, rhs: $3}'
             ]
         ],

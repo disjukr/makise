@@ -9,6 +9,11 @@ function Schema(ast) {
     self.checkers = null;
 }
 
+function SchemaError(message) {
+    var self = this;
+    self.message = message;
+}
+
 function ValidationError(value, context, message) {
     var self = this;
     self.value = value;
@@ -84,7 +89,10 @@ Schema.prototype.validate = function validate(value) {
         default: throw ltype;
         }
     });
-    return self.check(self.checkers['this'], value, []);
+    var thisChecker = self.checkers['this'];
+    if (thisChecker === undefined)
+        throw new SchemaError('what is this?');
+    return self.check(thisChecker, value, []);
 };
 
 Schema.prototype.eval = function eval(expression, context) {
@@ -129,6 +137,9 @@ Schema.prototype.eval = function eval(expression, context) {
     case '%': {
         return self.eval(expression.lhs, context) % self.eval(expression.rhs, context);
     } break;
+    case 'not': {
+        return !self.eval(expression.rhs, context);
+    } break;
     default: throw expression;
     }
 };
@@ -153,7 +164,7 @@ Schema.prototype.check = function check(checker, value, context) {
     if (allIsWell) {
         checker.checkList = checker.checkList || [];
         checker.checkList.forEach(function (moreChecker) {
-            var result = moreChecker(value, context);
+            var result = self.check(moreChecker, value, context);
             if (!result) allIsWell = false;
         });
     }
@@ -168,7 +179,7 @@ Schema.prototype.rtype = function rtype(rtypeNode) {
     case 'identifier': {
         return function checkerReference(value, context) {
             var rtype = self.checkers[rtypeNode.name];
-            return rtype(value, context);
+            return self.check(rtype, value, context);
         };
     } break;
     case 'enum': {

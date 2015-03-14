@@ -72,7 +72,7 @@ something[d = 'okabe'] throws '왠지 이 객체는 통과시켜주고 싶지 �
 
 // 기본타입에도 조건을 걸 수 있습니다.
 int is number
-int[this % 1 = 0] throws '{{context}} is not int'
+int[not this % 1 = 0] throws '{{context}} is not int'
 // {{context}}는 현재 타입 검사를 하는 대상의 표현식으로 치환됩니다.
 ```
 
@@ -101,6 +101,7 @@ int[this % 1 = 0] throws '{{context}} is not int'
     - [x] `a[b < c]`, `a[b > c]`, `a[b <= c]`, `a[b >= c]`
     - [x] `a[b + c]`, `a[b - c]`
     - [x] `a[b * c]`, `a[b / c]`, `a[b % c]`
+    - [x] `a[not b]`
     - [ ] `a[b or c]`, `a[b and c]`
 * [x] `a is b or c`, `a is b and c`
 * [ ] `a is not b`

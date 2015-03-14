@@ -101,6 +101,13 @@ describe('a_throws_b', function() {
     });
 });
 
-it ('package.json', function () {
-    assert(result(json('package.json'), file('test/package.json.makise')));
+describe('etc', function () {
+    it('int', function () {
+        var schema = 'this is int \n int is number \n int[not this % 1 = 0] throws "{{context}} is not int"';
+        assert(result(1, schema));
+        assert(errors(1.5, schema).length > 0);
+    });
+    it ('package.json', function () {
+        assert(result(json('package.json'), file('test/package.json.makise')));
+    });
 });
