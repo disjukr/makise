@@ -86,6 +86,11 @@ describe('a_is_b', function() {
             assert(result(1, 'this is number \n this[this > 1] throws "0"'));
             assert(result(0, 'this is number \n this[this >= 1] throws "0"'));
             assert(errors(1, 'this is number \n this[this >= 1] throws "0"').length > 0);
+            assert(errors(5, 'this is number \n this[this = 2 + 3] throws "5"').length > 0);
+            assert(errors(-1, 'this is number \n this[this = 2 - 3] throws "-1"').length > 0);
+            assert(errors(6, 'this is number \n this[this = 2 * 3] throws "6"').length > 0);
+            assert(errors(1.5, 'this is number \n this[this = 3 / 2] throws "1.5"').length > 0);
+            assert(errors(1, 'this is number \n this[this = 3 % 2] throws "1"').length > 0);
         });
     });
 });

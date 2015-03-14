@@ -114,6 +114,21 @@ Schema.prototype.eval = function eval(expression, context) {
     case '>=': {
         return self.eval(expression.lhs, context) >= self.eval(expression.rhs, context);
     } break;
+    case '+': {
+        return self.eval(expression.lhs, context) + self.eval(expression.rhs, context);
+    } break;
+    case '-': {
+        return self.eval(expression.lhs, context) - self.eval(expression.rhs, context);
+    } break;
+    case '*': {
+        return self.eval(expression.lhs, context) * self.eval(expression.rhs, context);
+    } break;
+    case '/': {
+        return self.eval(expression.lhs, context) / self.eval(expression.rhs, context);
+    } break;
+    case '%': {
+        return self.eval(expression.lhs, context) % self.eval(expression.rhs, context);
+    } break;
     default: throw expression;
     }
 };

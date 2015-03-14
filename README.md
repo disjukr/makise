@@ -99,8 +99,8 @@ int[this % 1 = 0] throws '{{context}} is not int'
     - [x] `a[field = value]`
     - [ ] `a[field.sub_field]`
     - [x] `a[b < c]`, `a[b > c]`, `a[b <= c]`, `a[b >= c]`
-    - [ ] `a[b + c]`, `a[b - c]`
-    - [ ] `a[b * c]`, `a[b / c]`, `a[b % c]`
+    - [x] `a[b + c]`, `a[b - c]`
+    - [x] `a[b * c]`, `a[b / c]`, `a[b % c]`
     - [ ] `a[b or c]`, `a[b and c]`
 * [x] `a is b or c`, `a is b and c`
 * [ ] `a is not b`
