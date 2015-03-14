@@ -1,8 +1,15 @@
+var fs = require('fs');
 var assert = require('assert');
 
 var parser = require('../parser');
 var schema = require('../schema');
 
+function file(path) {
+    return fs.readFileSync(path, { encoding: 'utf8' });
+}
+function json(path) {
+    return JSON.parse(file(path));
+}
 function newSchema(makiseCode) {
     return new schema(parser.parse(makiseCode));
 }
@@ -87,4 +94,8 @@ describe('a_throws_b', function() {
     it ('(╯°□°）╯︵ ┻━┻', function () {
         assert(errors(undefined, 'this throws "(╯°□°）╯︵ ┻━┻"').length > 0);
     });
+});
+
+it ('package.json', function () {
+    assert(result(json('package.json'), file('test/package.json.makise')));
 });
