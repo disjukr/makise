@@ -102,6 +102,12 @@ describe('a_throws_b', function() {
 });
 
 describe('etc', function () {
+    it('default', function () {
+        assert(result({}, 'this is {a: number = 1}'));
+        assert(errors({}, 'this is {a: number}').length > 0);
+        assert(result({}, 'this is {a = 1}'));
+        assert(errors({a: '1'}, 'this is {a = 1}').length > 0);
+    });
     it('only conditional', function () {
         assert(result(undefined, 'this is c \n c[false] throws "oh?"'));
         assert(errors(undefined, 'this is c \n c[true] throws "ho!"').length > 0);

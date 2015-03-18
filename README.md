@@ -108,8 +108,8 @@ int[not this % 1 = 0] throws '{{context}} is not int'
 * [x] `a is (b, c)` enum checker
 * [ ] `a is (b, c,)` allow trailing comma
 * [x] `a is {b: c}` object checker
-    - [ ] `a is {b: c = d}` default value
-    - [ ] `a is {b = c}` type inference
+    - [x] `a is {b: c = d}` default value
+    - [x] `a is {b = c}` type inference
 * [x] `a is [b, c]` array checker
     - [x] `a is [c, d, ...]` pattern checker
 * [ ] `#if nodejs`, `#endif` preprocessor

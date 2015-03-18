@@ -267,7 +267,8 @@ Schema.prototype.rtype = function rtype(rtypeNode) {
     case 'object': {
         var fields = rtypeNode.fields.map(function (field) {
             var replica = Object.create(field);
-            replica.rtype = self.rtype(replica.rtype);
+            if (replica.rtype !== undefined)
+                replica.rtype = self.rtype(replica.rtype);
             return replica;
         });
         return new Checker([function checkObject(value, context) {
@@ -290,8 +291,19 @@ Schema.prototype.rtype = function rtype(rtypeNode) {
                 var restKeySet = new Set(Object.keys(value));
                 plainFields.forEach(function (field) {
                     var key = field.match.name;
-                    var rtype = field.rtype;
                     var item = value[key];
+                    var rtype = field.rtype;
+                    var defaultValue = field.default;
+                    if (item === undefined)
+                        item = defaultValue;
+                    if (rtype === undefined) {
+                        if (defaultValue === null)
+                            rtype = self.checkerMap['any'];
+                        else if (Array.isArray(defaultValue))
+                            rtype = self.checkerMap['array'];
+                        else
+                            rtype = self.checkerMap[typeof defaultValue];
+                    }
                     var currentContext = context.concat(key);
                     var result = self.check(rtype, item, currentContext);
                     restKeySet.delete(key);
