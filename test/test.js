@@ -102,6 +102,16 @@ describe('a_throws_b', function() {
 });
 
 describe('etc', function () {
+    it('only conditional', function () {
+        assert(result(undefined, 'this is c \n c[false] throws "oh?"'));
+        assert(errors(undefined, 'this is c \n c[true] throws "ho!"').length > 0);
+    });
+    it('merge', function () {
+        var schema = 'this is {a: number} \n this is {b: string}';
+        assert(result({a: 0, b: '0'}, schema));
+        assert(errors({a: 0}, schema).length > 0);
+        assert(errors({b: '0'}, schema).length > 0);
+    })
     it('int', function () {
         var schema = 'this is int \n int is number \n int[not this % 1 = 0] throws "{{context}} is not int"';
         assert(result(1, schema));

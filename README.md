@@ -95,7 +95,7 @@ int[not this % 1 = 0] throws '{{context}} is not int'
 
 * [x] `a is b`
 * [x] `a throws "message"`
-* [x] `a[expression]` more checker
+* [x] `a[expression] is b` conditional checker
     - [x] `a[field = value]`
     - [ ] `a[field.sub_field]`
     - [x] `a[b < c]`, `a[b > c]`, `a[b <= c]`, `a[b >= c]`
@@ -104,7 +104,7 @@ int[not this % 1 = 0] throws '{{context}} is not int'
     - [x] `a[not b]`
     - [ ] `a[b or c]`, `a[b and c]`
 * [x] `a is b or c`, `a is b and c`
-* [ ] `a is not b`
+* [ ] `a is not b` - 문법 디자인 고민 중
 * [x] `a is (b, c)` enum checker
 * [ ] `a is (b, c,)` allow trailing comma
 * [x] `a is {b: c}` object checker

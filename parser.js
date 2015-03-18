@@ -51,7 +51,7 @@ var syntax = {
         a_throws_b: [['ltype THROWS STRING', '$$ = {type: "a_throws_b", ltype: $1, message: eval($3)}']],
         ltype: [
             ['primary_ltype', '$$ = $1'],
-            ['primary_ltype [ expression ]', '$$ = {type: "check_more", ltype: $1, condition: $3}']
+            ['primary_ltype [ expression ]', '$$ = {type: "conditional", ltype: $1, condition: $3}']
         ],
         primary_ltype: [
             ['IDENTIFIER', '$$ = {type: "identifier", name: $1}'],
