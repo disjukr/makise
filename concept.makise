@@ -71,15 +71,3 @@ Parent is {
 }
 
 Parent::Child is unique int // only unique in Parent instances
-
-
-#if nodejs
-
-checker('semver', function (value, context) {
-    var result = require('semver').valid(value);
-    if (!result)
-        throws(value, context, '{{context}} is not semver');
-    return result;
-});
-
-#endif
