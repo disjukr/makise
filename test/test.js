@@ -99,6 +99,14 @@ describe('a_is_b', function() {
             assert(errors('', 'this[this?] throws "not undefined"').length > 0);
             assert(errors('0', 'this[this?] throws "not undefined"').length > 0);
             assert(errors(null, 'this[this?] throws "not undefined"').length > 0);
+            assert(result(0, 'this[false and false] throws "and"'));
+            assert(result(0, 'this[true and false] throws "and"'));
+            assert(result(0, 'this[false and true] throws "and"'));
+            assert(errors(0, 'this[true and true] throws "and"').length > 0);
+            assert(result(0, 'this[false or false] throws "or"'));
+            assert(errors(0, 'this[true or false] throws "or"').length > 0);
+            assert(errors(0, 'this[false or true] throws "or"').length > 0);
+            assert(errors(0, 'this[true or true] throws "or"').length > 0);
         });
     });
 });

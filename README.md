@@ -101,7 +101,7 @@ int[not this % 1 = 0] throws '{{context}} is not int'
     - [x] `a[b + c]`, `a[b - c]`
     - [x] `a[b * c]`, `a[b / c]`, `a[b % c]`
     - [x] `a[not b]`
-    - [ ] `a[b or c]`, `a[b and c]`
+    - [x] `a[b or c]`, `a[b and c]`
     - [x] `a[b?]`
 * [x] `a is b or c`, `a is b and c`
 * [ ] `a is not b` - 문법 디자인 고민 중

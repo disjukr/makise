@@ -153,6 +153,12 @@ Schema.prototype.eval = function eval(expression, context) {
     case '%': {
         return self.eval(expression.lhs, context) % self.eval(expression.rhs, context);
     } break;
+    case 'and': {
+        return self.eval(expression.lhs, context) && self.eval(expression.rhs, context);
+    } break;
+    case 'or': {
+        return self.eval(expression.lhs, context) || self.eval(expression.rhs, context);
+    } break;
     case 'not': {
         return !self.eval(expression.rhs, context);
     } break;
