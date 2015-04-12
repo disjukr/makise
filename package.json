@@ -1,6 +1,6 @@
 {
   "name": "makise",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "pretty JSON schema definition language",
   "main": "index.js",
   "preferGlobal": true,
