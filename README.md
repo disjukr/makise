@@ -108,7 +108,7 @@ int[not this % 1 = 0] throws '{{context}} is not int'
 * [x] `a is b or c`, `a is b and c`
 * [ ] `a is not b` - 문법 디자인 고민 중
 * [x] `a is (b, c)` enum checker
-* [ ] `a is (b, c,)` allow trailing comma
+* [x] `a is (b, c,)` allow trailing comma
 * [x] `a is {b: c}` object checker
     - [x] `a is {b: c = d}` default value
     - [x] `a is {b = c}` type inference

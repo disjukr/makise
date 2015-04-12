@@ -60,7 +60,7 @@ var syntax = {
         rtype: [['rtype_or', '$$ = $1']],
         primary_rtype: [
             ['IDENTIFIER', '$$ = {type: "identifier", name: $1}'],
-            ['*', '$$ = {type: "wildcard"}'],
+            ['*', '$$ = {type: "identifier", name: "*"}'],
             ['rtype_vector', '$$ = $1'],
             ['rtype_enum', '$$ = $1'],
             ['rtype_object', '$$ = $1']
@@ -75,13 +75,17 @@ var syntax = {
         ],
         rtype_vector: [
             ['[ rtypes ]', '$$ = {type: "tuple", items: $2}'],
+            ['[ rtypes , ]', '$$ = {type: "tuple", items: $2}'],
             ['[ rtypes , ... ]', '$$ = {type: "pattern", items: $2}']
         ],
         rtypes: [
             ['rtype', '$$ = [$1]'],
             ['rtypes , rtype', '$1.push($3); $$ = $1']
         ],
-        rtype_enum: [['( values )', '$$ = {type: "enum", items: $2}']],
+        rtype_enum: [
+            ['( values )', '$$ = {type: "enum", items: $2}'],
+            ['( values , )', '$$ = {type: "enum", items: $2}']
+        ],
         values: [
             ['value', '$$ = [$1]'],
             ['values , value', '$1.push($3); $$ = $1']
@@ -94,9 +98,18 @@ var syntax = {
             ['value_array', '$$ = $1'],
             ['value_object', '$$ = $1']
         ],
-        value_array: [['[ values ]', '$$ = $2']],
+        value_array: [
+            ['[ values ]', '$$ = $2'],
+            ['[ values , ]', '$$ = $2']
+        ],
         value_object: [
             ['{ key_value_pairs }', [
+                '$$ = {};',
+                '$2.forEach(function (pair) {',
+                    '$$[pair.key] = pair.value;',
+                '}.bind(this));'
+            ].join('')],
+            ['{ key_value_pairs , }', [
                 '$$ = {};',
                 '$2.forEach(function (pair) {',
                     '$$[pair.key] = pair.value;',
@@ -113,7 +126,8 @@ var syntax = {
             ['STRING', '$$ = eval($1)']
         ],
         rtype_object: [
-            ['{ fields }', '$$ = {type: "object", fields: $2};']
+            ['{ fields }', '$$ = {type: "object", fields: $2};'],
+            ['{ fields , }', '$$ = {type: "object", fields: $2};']
         ],
         fields: [
             ['field', '$$ = [$1]'],

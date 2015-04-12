@@ -116,6 +116,13 @@ describe('etc', function () {
         assert(result({}, 'this is {a = 1}'));
         assert(errors({a: '1'}, 'this is {a = 1}').length > 0);
     });
+    it('allow trailing comma', function () {
+        assert(result({}, 'this is {a: *,}'));
+        assert(result({}, 'this is {a: * = {a: "a",}}'));
+        assert(result([0], 'this is [*,]'));
+        assert(result({}, 'this is {a: * = [1,]}'));
+        assert(result(0, 'this is (0,)'));
+    });
     it('only conditional', function () {
         assert(result(undefined, 'this is c \n c[false] throws "oh?"'));
         assert(errors(undefined, 'this is c \n c[true] throws "ho!"').length > 0);
