@@ -95,7 +95,7 @@ int[not this % 1 = 0] throws '{{context}} is not int'
 * [x] `a throws "message"`
 * [x] `a[expression] is b` conditional checker
     - [x] `a[field = value]`
-    - [ ] `a[field.sub_field]`
+    - [x] `a[field.sub_field]`
     - [x] `a[(b)]`
     - [x] `a[b < c]`, `a[b > c]`, `a[b <= c]`, `a[b >= c]`
     - [x] `a[b + c]`, `a[b - c]`

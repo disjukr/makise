@@ -120,6 +120,11 @@ Schema.prototype.eval = function eval(expression, context) {
             return context;
         return context[expression.name];
     } break;
+    case 'access': {
+        var value = self.eval(expression.expression, context);
+        if (value === undefined) return undefined;
+        return value[expression.key];
+    } break;
     case '?': {
         return self.eval(expression.lhs, context) !== undefined;
     } break;

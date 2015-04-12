@@ -107,6 +107,9 @@ describe('a_is_b', function() {
             assert(errors(0, 'this[true or false] throws "or"').length > 0);
             assert(errors(0, 'this[false or true] throws "or"').length > 0);
             assert(errors(0, 'this[true or true] throws "or"').length > 0);
+            assert(result({}, 'this[a.b.c] throws "d"'));
+            assert(errors({a: {b: {c: true}}}, 'this[a.b.c] throws "d"').length > 0);
+            assert(errors({a: {b: {c: true}}}, 'this[this.a.b.c] throws "d"').length > 0);
         });
     });
 });
