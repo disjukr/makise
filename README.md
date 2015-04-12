@@ -12,9 +12,7 @@
 ## 설치하고 돌려보기
 
 ```sh
-$ git clone https://github.com/disjukr/makise.git
-$ cd makise
-$ npm install -g .
+$ npm install -g makise
 $ makise --help
 ```
 
@@ -25,7 +23,7 @@ $ makise --help
 test 폴더에 들어있는 `package.json.makise` 스키마를 사용해서 `package.json` 파일이 정상적인지 체크할 수 있습니다.
 
 ```sh
-$ makise package.json test/package.json.makise
+$ makise test/package.json.makise package.json
 ```
 
 아무 내용도 출력되지 않고 프로그램이 종료된다면 `package.json`이 정상적인 내용을 담고있다는 것을 뜻합니다.

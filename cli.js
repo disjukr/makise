@@ -5,16 +5,16 @@ process.title = 'makise';
 var nomnom = require('nomnom');
 nomnom.script('makise');
 nomnom.options({
-    target: {
-        required: true,
-        position: 0,
-        help: 'json file'
-    },
     schema: {
         required: true,
-        position: 1,
+        position: 0,
         list: true,
         help: 'makise schema definitions'
+    },
+    target: {
+        required: true,
+        position: 1,
+        help: 'json file'
     },
     help: {
         abbr: 'h',
