@@ -98,11 +98,13 @@ int[not this % 1 = 0] throws '{{context}} is not int'
 * [x] `a[expression] is b` conditional checker
     - [x] `a[field = value]`
     - [ ] `a[field.sub_field]`
+    - [x] `a[(b)]`
     - [x] `a[b < c]`, `a[b > c]`, `a[b <= c]`, `a[b >= c]`
     - [x] `a[b + c]`, `a[b - c]`
     - [x] `a[b * c]`, `a[b / c]`, `a[b % c]`
     - [x] `a[not b]`
     - [ ] `a[b or c]`, `a[b and c]`
+    - [x] `a[b?]`
 * [x] `a is b or c`, `a is b and c`
 * [ ] `a is not b` - 문법 디자인 고민 중
 * [x] `a is (b, c)` enum checker
@@ -112,5 +114,4 @@ int[not this % 1 = 0] throws '{{context}} is not int'
     - [x] `a is {b = c}` type inference
 * [x] `a is [b, c]` array checker
     - [x] `a is [c, d, ...]` pattern checker
-* [ ] `#if nodejs`, `#endif` preprocessor
 * [ ] validator code generation

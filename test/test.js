@@ -91,6 +91,14 @@ describe('a_is_b', function() {
             assert(errors(6, 'this is number \n this[this = 2 * 3] throws "6"').length > 0);
             assert(errors(1.5, 'this is number \n this[this = 3 / 2] throws "1.5"').length > 0);
             assert(errors(1, 'this is number \n this[this = 3 % 2] throws "1"').length > 0);
+            assert(result(undefined, 'this[this?] throws "not undefined"'));
+            assert(errors(1, 'this[this?] throws "not undefined"').length > 0);
+            assert(errors(false, 'this[this?] throws "not undefined"').length > 0);
+            assert(errors(0, 'this[this?] throws "not undefined"').length > 0);
+            assert(errors(NaN, 'this[this?] throws "not undefined"').length > 0);
+            assert(errors('', 'this[this?] throws "not undefined"').length > 0);
+            assert(errors('0', 'this[this?] throws "not undefined"').length > 0);
+            assert(errors(null, 'this[this?] throws "not undefined"').length > 0);
         });
     });
 });

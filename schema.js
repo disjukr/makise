@@ -116,10 +116,12 @@ Schema.prototype.eval = function eval(expression, context) {
         return expression.value;
     } break;
     case 'identifier': {
-        var member = context[expression.name];
-        if (member === undefined && expression.name === 'this')
+        if (expression.name === 'this')
             return context;
-        return member;
+        return context[expression.name];
+    } break;
+    case '?': {
+        return self.eval(expression.lhs, context) !== undefined;
     } break;
     case '=': {
         return self.eval(expression.lhs, context) == self.eval(expression.rhs, context);

@@ -14,6 +14,7 @@ var syntax = {
             ['\\b(not)\\b', 'return "NOT"'],
             ['\\b(throws)\\b', 'return "THROWS"'],
             ['[_a-zA-Z]+', 'return "IDENTIFIER"'],
+            ['\\?', 'return "?"'],
             ['\\*', 'return "*"'],
             ['\\/', 'return "/"'],
             ['%', 'return "%"'],
@@ -134,8 +135,15 @@ var syntax = {
             ['value', '$$ = {type: "value", value: $1}'],
             ['( expression )', '$$ = $2'],
         ],
-        access_expression: [
+        exists_expression: [
             ['primary_expression', '$$ = $1'],
+            [
+                'exists_expression ?',
+                '$$ = {type: "?", lhs: $1}'
+            ]
+        ],
+        access_expression: [
+            ['exists_expression', '$$ = $1'],
             [
                 'access_expression . IDENTIFIER',
                 '$$ = {type: "access", expression: $1, key: $3}'
