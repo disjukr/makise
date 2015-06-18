@@ -242,8 +242,10 @@ var syntax = {
         ]
     }
 };
-var lexer = new require('jison-lex')(syntax.lex);
-var parser = new require('jison').Parser(syntax);
+var jisonLex = require('jison-lex');
+var jison = require('jison');
+var lexer = new jisonLex(syntax.lex);
+var parser = new jison.Parser(syntax);
 
 function pad(str, len) {
     if (str.length < len) {

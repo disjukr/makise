@@ -30,6 +30,18 @@ $ makise test/package.json.makise package.json
 `package.json`에 엉뚱한 타입의 데이터를 넣으면 무슨 일이 일어나는지도 한 번 확인해보세요.
 
 
+## 브라우저에서 사용하기
+
+```html
+<script src="bundle.js"></script>
+<script>
+var schema = makise.schemaFromCode('this is number');
+schema.validate(1); //=> true
+schema.validate(true); //=> false
+</script>
+```
+
+
 ## 문법 훑어보기
 
 ### this 정의하기

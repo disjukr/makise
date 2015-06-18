@@ -7,7 +7,8 @@
   "bin": "cli.js",
   "scripts": {
     "test": "mocha",
-    "prepublish": "mocha"
+    "prepublish": "mocha",
+    "bundle": "browserify index.js | uglifyjs > bundle.js"
   },
   "dependencies": {
     "es6-shim": "^0.27.1",
@@ -16,7 +17,9 @@
     "nomnom": "^1.8.0"
   },
   "devDependencies": {
-    "mocha": "^2.1.0"
+    "browserify": "^10.2.4",
+    "mocha": "^2.1.0",
+    "uglify-js": "^2.4.23"
   },
   "author": "JongChan Choi <jong@chan.moe>",
   "license": "MIT",

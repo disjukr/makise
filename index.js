@@ -18,3 +18,7 @@ module.exports = {
         return new Schema(ast);
     }
 };
+
+if ((typeof window !== 'undefined') && (window.makise === undefined)) {
+    window.makise = module.exports;
+}
