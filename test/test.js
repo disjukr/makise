@@ -17,7 +17,12 @@ function result(value, makiseCode) {
     return newSchema(makiseCode).validate(value);
 }
 function errors(value, makiseCode) {
-    var schemaInstance = newSchema(makiseCode);
+    var schemaInstance;
+    try {
+        schemaInstance = newSchema(makiseCode);
+    } catch(e) {
+        return [e.message]
+    }
     schemaInstance.validate(value);
     console.log(schemaInstance.errorList.map(function (error) {
         return error.toString();
@@ -156,4 +161,9 @@ describe('etc', function () {
     it ('package.json', function () {
         assert(result(json('package.json'), file('test/package.json.makise')));
     });
+    it('identifier check', function () {
+        assert(result("2013-11-15T15:34:10Z", 'this is ISO8601DateString \n ISO8601DateString is string'));
+        assert(errors(200, 'this is 2_hundred \n 2_hundred is number').length > 0);
+        assert(result(1234, 'this is one_thousand_and_234 \n one_thousand_and_234 is number'));
+    })
 });
