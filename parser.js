@@ -64,7 +64,8 @@ var syntax = {
             ['*', '$$ = {type: "identifier", name: "*"}'],
             ['rtype_vector', '$$ = $1'],
             ['rtype_enum', '$$ = $1'],
-            ['rtype_object', '$$ = $1']
+            ['rtype_object', '$$ = $1'],
+            ['IDENTIFIER ?', 'if ($1 === "any") console.warn("Syntax Warning: just use `any` instead of `any?`."); $$ = {type: "or", lhs: {type: "identifier", name: $1}, rhs: {type: "identifier", name: "null"}}']
         ],
         rtype_and: [
             ['primary_rtype', '$$ = $1'],
