@@ -59,6 +59,7 @@ var syntax = {
         ],
         rtype: [['rtype_or', '$$ = $1']],
         primary_rtype: [
+            ['NULL', '$$ = {type: "identifier", name: "null"}'],
             ['IDENTIFIER', '$$ = {type: "identifier", name: $1}'],
             ['*', '$$ = {type: "identifier", name: "*"}'],
             ['rtype_vector', '$$ = $1'],

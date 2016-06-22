@@ -31,6 +31,10 @@ describe('a_is_b', function() {
             assert(result(undefined, 'this is void'));
             assert(!result(1, 'this is void'));
         });
+        it('this is null', function () {
+            assert(result(null, 'this is null'));
+            assert(!result(1, 'this is null'));
+        });
         it('this is number', function () {
             assert(result(1, 'this is number'));
             assert(!result(undefined, 'this is number'));
