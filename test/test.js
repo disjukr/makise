@@ -46,8 +46,11 @@ describe('a_is_b', function() {
             assert(!result(undefined, 'this is number'));
         });
         it('this is number?', function () {
+            assert(result(undefined, 'this is number?'));
             assert(result(null, 'this is number?'));
             assert(result(1, 'this is number?'));
+            assert(!result('1', 'this is number?'));
+            assert(!result(true, 'this is number?'));
         });
         it('enum', function () {
             assert(result('apple', 'this is ("apple", "banana", "orange")'));
