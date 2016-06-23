@@ -124,4 +124,5 @@ int[not this % 1 = 0] throws '{{context}} is not int'
     - [x] `a is {b = c}` type inference
 * [x] `a is [b, c]` array checker
     - [x] `a is [c, d, ...]` pattern checker
+* [x] `a is b?` nullable type
 * [ ] validator code generation

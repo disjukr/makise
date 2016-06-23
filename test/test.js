@@ -39,10 +39,15 @@ describe('a_is_b', function() {
         it('this is null', function () {
             assert(result(null, 'this is null'));
             assert(!result(1, 'this is null'));
+            assert(!result(undefined, 'this is null'));
         });
         it('this is number', function () {
             assert(result(1, 'this is number'));
             assert(!result(undefined, 'this is number'));
+        });
+        it('this is number?', function () {
+            assert(result(null, 'this is number?'));
+            assert(result(1, 'this is number?'));
         });
         it('enum', function () {
             assert(result('apple', 'this is ("apple", "banana", "orange")'));
