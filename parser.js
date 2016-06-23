@@ -13,7 +13,7 @@ var syntax = {
             ['\\b(or)\\b', 'return "OR"'],
             ['\\b(not)\\b', 'return "NOT"'],
             ['\\b(throws)\\b', 'return "THROWS"'],
-            ['[_a-zA-Z]+', 'return "IDENTIFIER"'],
+            ['[_a-zA-Z][_a-zA-Z0-9]*', 'return "IDENTIFIER"'],
             ['\\?', 'return "?"'],
             ['\\*', 'return "*"'],
             ['\\/', 'return "/"'],
