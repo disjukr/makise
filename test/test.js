@@ -21,7 +21,8 @@ function errors(value, makiseCode) {
     try {
         schemaInstance = newSchema(makiseCode);
     } catch(e) {
-        return [e.message]
+        console.log([e.message]);
+        return [e];
     }
     schemaInstance.validate(value);
     console.log(schemaInstance.errorList.map(function (error) {
@@ -51,6 +52,13 @@ describe('a_is_b', function() {
             assert(result(1, 'this is number?'));
             assert(!result('1', 'this is number?'));
             assert(!result(true, 'this is number?'));
+        });
+        it('this is string which matched by regex', function () {
+            assert(result("2013-11-15T15:34:10Z", "this is /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$/"));
+            assert(errors("apple", "this is /^.{4}$/").length > 0);
+            assert(result("kIwI", "this is /^kiwi$/i"));
+            assert(result("l33t", "this is /\\d/g"));
+            assert(errors(1, 'this is /(?:)/').length > 0);
         });
         it('enum', function () {
             assert(result('apple', 'this is ("apple", "banana", "orange")'));
@@ -137,6 +145,15 @@ describe('a_throws_b', function() {
     });
 });
 
+describe('regex', function () {
+    it('should be parsed properly', function () {
+        assert(result(']/', 'this is /^[/\\]]*$/'));
+    });
+    it('should be parsed only in the right place; should not be parsed like `IDENTIFIER [ NUMBER REGEX NUMBER ]`', function () {
+        assert(errors(.5, 'this is number \n this[this = 3 / 2 / 1 - 1] throws "It\'s fine!"').some(function (e) {return e.message === 'It\'s fine!'}));
+    });
+});
+
 describe('etc', function () {
     it('default', function () {
         assert(result({}, 'this is {a: number = 1}'));
@@ -173,5 +190,5 @@ describe('etc', function () {
         assert(result("2013-11-15T15:34:10Z", 'this is ISO8601DateString \n ISO8601DateString is string'));
         assert(errors(200, 'this is 2_hundred \n 2_hundred is number').length > 0);
         assert(result(1234, 'this is one_thousand_and_234 \n one_thousand_and_234 is number'));
-    })
+    });
 });
