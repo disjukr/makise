@@ -19,7 +19,7 @@ B is A and {
     }, // inferred as { a: boolean, c: string }
     g: A = {
         a: true,
-        // default value must have all fields
+        // default value must have every fields
         c: 'hello'
     }, // throws error
     h: A = {
