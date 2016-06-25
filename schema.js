@@ -212,6 +212,17 @@ Schema.prototype.rtype = function rtype(rtypeNode) {
             return self.check(rtype, value, context);
         }]);
     } break;
+    case 'regex': {
+        return new Checker([function checkRegex(value, context) {
+            var thisIsString = self.check(self.checkerMap['string'], value, context);
+            var regex = new RegExp(rtypeNode.regex.body, rtypeNode.regex.flags);
+            if (thisIsString) {
+                if (regex.test(value)) return true;
+                throws(value, context, '{{context}} should be matched by ' + regex + ', but {{value}}');
+            }
+            return false;
+        }]);
+    } break;
     case 'enum': {
         var items = rtypeNode.items;
         return new Checker([function checkEnum(value, context) {

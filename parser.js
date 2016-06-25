@@ -1,40 +1,45 @@
 var syntax = {
     lex: {
+        options: {
+            backtrack_lexer: true
+        },
+
         rules: [
             ['\\s+', ''],
             ['\\/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+\\/', ''],
             ['(?:\\/\\/|#).*(?=\\r\\n|\\n|$)', ''],
-            ['-?\\d*\\.?\\d+(?:[Ee](?:[+-]?\\d+)?)?', 'return "NUMBER"'],
-            ['\"([^\\\\\"]|\\\\.)*\"|\'([^\\\\\']|\\\\.)*\'', 'return "STRING"'],
-            ['\\b(true|false)\\b', 'return "BOOLEAN"'],
-            ['\\b(null)\\b', 'return "NULL"'],
-            ['\\b(is)\\b', 'return "IS"'],
-            ['\\b(and)\\b', 'return "AND"'],
-            ['\\b(or)\\b', 'return "OR"'],
-            ['\\b(not)\\b', 'return "NOT"'],
-            ['\\b(throws)\\b', 'return "THROWS"'],
-            ['[_a-zA-Z][_a-zA-Z0-9]*', 'return "IDENTIFIER"'],
-            ['\\?', 'return "?"'],
-            ['\\*', 'return "*"'],
-            ['\\/', 'return "/"'],
-            ['%', 'return "%"'],
-            ['\\+', 'return "+"'],
-            ['-', 'return "-"'],
-            ['<=', 'return "<="'],
-            ['>=', 'return ">="'],
-            ['<', 'return "<"'],
-            ['>', 'return ">"'],
-            ['\\(', 'return "("'],
-            ['\\)', 'return ")"'],
-            ['\\{', 'return "{"'],
-            ['\\}', 'return "}"'],
-            ['\\[', 'return "["'],
-            ['\\]', 'return "]"'],
-            ['=', 'return "="'],
-            [':', 'return ":"'],
-            [',', 'return ","'],
-            ['\\.\\.\\.', 'return "..."'],
-            ['\\.', 'return "."']
+            ['\\/(?:\\[(?:[^\\\\\\]]|\\\\.)*\\]|[^\\\\/]|\\\\.)*\\/[gimuy]*', 'if (yy.regexable) { yy.regexable = false; return "REGEX" } else this.reject();'],
+            ['-?\\d*\\.?\\d+(?:[Ee](?:[+-]?\\d+)?)?', 'yy.regexable = false; return "NUMBER"'],
+            ['\"([^\\\\\"]|\\\\.)*\"|\'([^\\\\\']|\\\\.)*\'', 'yy.regexable = false; return "STRING"'],
+            ['\\b(true|false)\\b', 'yy.regexable = false; return "BOOLEAN"'],
+            ['\\b(null)\\b', 'yy.regexable = false; return "NULL"'],
+            ['\\b(is)\\b', 'yy.regexable = true; return "IS"'],
+            ['\\b(and)\\b', 'yy.regexable = true; return "AND"'],
+            ['\\b(or)\\b', 'yy.regexable = true; return "OR"'],
+            ['\\b(not)\\b', 'yy.regexable = true; return "NOT"'],
+            ['\\b(throws)\\b', 'yy.regexable = false; return "THROWS"'],
+            ['[_a-zA-Z][_a-zA-Z0-9]*', 'yy.regexable = false; return "IDENTIFIER"'],
+            ['\\?', 'yy.regexable = true; return "?"'],
+            ['\\*', 'yy.regexable = true; return "*"'],
+            ['\\/', 'yy.regexable = true; return "/"'],
+            ['%', 'yy.regexable = true; return "%"'],
+            ['\\+', 'yy.regexable = true; return "+"'],
+            ['-', 'yy.regexable = true; return "-"'],
+            ['<=', 'yy.regexable = true; return "<="'],
+            ['>=', 'yy.regexable = true; return ">="'],
+            ['<', 'yy.regexable = true; return "<"'],
+            ['>', 'yy.regexable = true; return ">"'],
+            ['\\(', 'yy.regexable = true; return "("'],
+            ['\\)', 'yy.regexable = false; return ")"'],
+            ['\\{', 'yy.regexable = true; return "{"'],
+            ['\\}', 'yy.regexable = false; return "}"'],
+            ['\\[', 'yy.regexable = true; return "["'],
+            ['\\]', 'yy.regexable = false; return "]"'],
+            ['=', 'yy.regexable = true; return "="'],
+            [':', 'yy.regexable = true; return ":"'],
+            [',', 'yy.regexable = true; return ","'],
+            ['\\.\\.\\.', 'yy.regexable = false; return "..."'],
+            ['\\.', 'yy.regexable = false; return "."']
         ]
     },
     start: 'ast',
@@ -62,6 +67,12 @@ var syntax = {
             ['NULL', '$$ = {type: "identifier", name: "null"}'],
             ['IDENTIFIER', '$$ = {type: "identifier", name: $1}'],
             ['*', '$$ = {type: "identifier", name: "*"}'],
+            ['REGEX', [
+                '$$ = { type: "regex", regex: (function () {',
+                    'var m = $1.match(/^\\/(.+)\\/([gimuy]*)$/);',
+                    'return {body: m[1], flags: m[2]}',
+                '})() }'
+            ].join('')],
             ['rtype_vector', '$$ = $1'],
             ['rtype_enum', '$$ = $1'],
             ['rtype_object', '$$ = $1'],
@@ -248,6 +259,11 @@ var jisonLex = require('jison-lex');
 var jison = require('jison');
 var lexer = new jisonLex(syntax.lex);
 var parser = new jison.Parser(syntax);
+parser.yy = function () {
+    return {
+        regexable: false
+    };
+};
 
 function pad(str, len) {
     if (str.length < len) {
