@@ -215,7 +215,7 @@ Schema.prototype.rtype = function rtype(rtypeNode) {
     case 'regex': {
         return new Checker([function checkRegex(value, context) {
             var thisIsString = self.check(self.checkerMap['string'], value, context);
-            var regex = rtypeNode.regex;
+            var regex = new RegExp(rtypeNode.regex.body, rtypeNode.regex.flags);
             if (thisIsString) {
                 if (regex.test(value)) return true;
                 throws(value, context, '{{context}} should be matched by ' + regex + ', but {{value}}');

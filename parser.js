@@ -3,7 +3,7 @@ var syntax = {
         options: {
             backtrack_lexer: true
         },
-        
+
         rules: [
             ['\\s+', ''],
             ['\\/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+\\/', ''],
@@ -70,7 +70,7 @@ var syntax = {
             ['REGEX', [
                 '$$ = { type: "regex", regex: (function () {',
                     'var m = $1.match(/^\\/(.+)\\/([gimuy]*)$/);',
-                    'return new RegExp(m[1], m[2]);',
+                    'return {body: m[1], flags: m[2]}',
                 '})() }'
             ].join('')],
             ['rtype_vector', '$$ = $1'],
